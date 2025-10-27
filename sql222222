@@ -1,0 +1,1347 @@
+// 1. Метод, возвращающий квадрат числа
+static int Square(int number)
+{
+    return number * number;
+}
+
+// 2. Метод, вычисляющий сумму двух целых чисел
+static int Sum(int a, int b)
+{
+    return a + b;
+}
+
+// 3. Метод, возвращающий длину строки
+static int GetStringLength(string str)
+{
+    return str?.Length ?? 0;
+}
+
+// 4. Метод для вычисления НОД двух чисел
+static int GCD(int a, int b)
+{
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return Math.Abs(a);
+}
+
+// 5. Метод для вычисления НОД двух чисел
+static int FindGCD(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+    return a;
+}
+
+// 6. Метод, выводящий таблицу умножения числа
+static void PrintMultiplicationTable(int number)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        Console.WriteLine($"{number} × {i} = {number * i}");
+    }
+}
+
+// 7. Метод, возвращающий квадрат числа
+static int Square(int number)
+{
+    return number * number;
+}
+
+// 8. Метод для реверса строки
+static string ReverseString(string str)
+{
+    if (string.IsNullOrEmpty(str)) return str;
+    char[] charArray = str.ToCharArray();
+    Array.Reverse(charArray);
+    return new string(charArray);
+}
+
+// 9. Метод, возвращающий максимум из трех чисел
+static int MaxOfThree(int a, int b, int c)
+{
+    return Math.Max(a, Math.Max(b, c));
+}
+
+// 10. Метод для вычисления суммы элементов массива
+static int ArraySum(int[] array)
+{
+    if (array == null) return 0;
+    int sum = 0;
+    foreach (int num in array)
+        sum += num;
+    return sum;
+}
+
+// 11. Метод, находящий минимум в массиве
+static int FindMin(int[] array)
+{
+    if (array == null || array.Length == 0)
+        throw new ArgumentException("Массив не может быть пустым");
+    
+    int min = array[0];
+    for (int i = 1; i < array.Length; i++)
+    {
+        if (array[i] < min)
+            min = array[i];
+    }
+    return min;
+}
+
+// 12. Метод, определяющий, является ли число четным
+static bool IsEven(int number)
+{
+    return number % 2 == 0;
+}
+
+// 13. Метод, вычисляющий сумму двух целых чисел
+static int Add(int a, int b)
+{
+    return a + b;
+}
+
+// 14. Метод для нахождения максимума из трех чисел
+static int GetMaxOfThree(int a, int b, int c)
+{
+    int max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    return max;
+}
+
+// 15. Метод, проверяющий, является ли число простым
+static bool IsPrime(int number)
+{
+    if (number < 2) return false;
+    if (number == 2) return true;
+    if (number % 2 == 0) return false;
+    
+    for (int i = 3; i * i <= number; i += 2)
+    {
+        if (number % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 16. Метод для вычисления НОД двух чисел
+static int CalculateGCD(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+// 17. Метод, проверяющий, содержится ли элемент в массиве
+static bool ContainsElement(int[] array, int element)
+{
+    if (array == null) return false;
+    foreach (int item in array)
+    {
+        if (item == element)
+            return true;
+    }
+    return false;
+}
+
+// 18. Метод, возвращающий абсолютное значение числа
+static int AbsoluteValue(int number)
+{
+    return Math.Abs(number);
+}
+
+// 19. Метод, вычисляющий сумму двух целых чисел
+static int SumNumbers(int a, int b)
+{
+    return a + b;
+}
+
+// 20. Метод для реверса строки
+static string StringReverse(string input)
+{
+    if (string.IsNullOrEmpty(input)) return input;
+    char[] chars = input.ToCharArray();
+    Array.Reverse(chars);
+    return new string(chars);
+}
+
+// 21. Метод, проверяющий, является ли число простым
+static bool CheckPrime(int n)
+{
+    if (n < 2) return false;
+    for (int i = 2; i <= Math.Sqrt(n); i++)
+    {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 22. Метод для реверса строки
+static string ReverseText(string text)
+{
+    if (string.IsNullOrEmpty(text)) return text;
+    return new string(text.Reverse().ToArray());
+}
+
+// 23. Метод, находящий минимум в массиве
+static int GetMinValue(int[] numbers)
+{
+    if (numbers == null || numbers.Length == 0)
+        throw new ArgumentException("Массив не может быть пустым");
+    
+    int min = numbers[0];
+    foreach (int num in numbers)
+    {
+        if (num < min)
+            min = num;
+    }
+    return min;
+}
+
+// 24. Метод для вычисления НОД двух чисел
+static int GreatestCommonDivisor(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+    return a;
+}
+
+// 25. Метод для сортировки массива по возрастанию
+static int[] SortArray(int[] array)
+{
+    if (array == null) return null;
+    int[] sorted = (int[])array.Clone();
+    Array.Sort(sorted);
+    return sorted;
+}
+
+// 26. Метод для вычисления суммы элементов массива
+static int CalculateArraySum(int[] array)
+{
+    if (array == null) return 0;
+    int total = 0;
+    foreach (int num in array)
+        total += num;
+    return total;
+}
+
+// 27. Метод, возвращающий длину строки
+static int StringLength(string str)
+{
+    return str == null ? 0 : str.Length;
+}
+
+// 28. Метод, вычисляющий сумму двух целых чисел
+static int AddNumbers(int x, int y)
+{
+    return x + y;
+}
+
+// 29. Метод для конкатенации двух строк
+static string ConcatenateStrings(string str1, string str2)
+{
+    return str1 + str2;
+}
+
+// 30. Метод, находящий минимум в массиве
+static int ArrayMin(int[] array)
+{
+    if (array == null || array.Length == 0)
+        throw new ArgumentException("Массив не может быть пустым");
+    
+    int min = array[0];
+    for (int i = 1; i < array.Length; i++)
+    {
+        if (array[i] < min)
+            min = array[i];
+    }
+    return min;
+}
+
+// 31. Метод для вычисления площади прямоугольника
+static double RectangleArea(double width, double height)
+{
+    return width * height;
+}
+
+// 32. Метод, возвращающий длину строки
+static int GetLength(string text)
+{
+    return text?.Length ?? 0;
+}
+
+// 33. Метод, выводящий таблицу умножения числа
+static void DisplayMultiplicationTable(int n)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        Console.WriteLine($"{n} * {i} = {n * i}");
+    }
+}
+
+// 34. Метод, проверяющий, является ли число простым
+static bool IsPrimeNumber(int number)
+{
+    if (number < 2) return false;
+    if (number == 2) return true;
+    if (number % 2 == 0) return false;
+    
+    for (int i = 3; i * i <= number; i += 2)
+    {
+        if (number % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 35. Метод для вычисления площади прямоугольника
+static double CalculateArea(double length, double width)
+{
+    return length * width;
+}
+
+// 36. Метод, возвращающий квадрат числа
+static int GetSquare(int num)
+{
+    return num * num;
+}
+
+// 37. Метод для нахождения максимума из трех чисел
+static int MaximumOfThree(int x, int y, int z)
+{
+    return Math.Max(Math.Max(x, y), z);
+}
+
+// 38. Метод для подсчета количества гласных в строке
+static int CountVowels(string str)
+{
+    if (string.IsNullOrEmpty(str)) return 0;
+    char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я' };
+    int count = 0;
+    foreach (char c in str.ToLower())
+    {
+        if (Array.IndexOf(vowels, c) >= 0)
+            count++;
+    }
+    return count;
+}
+
+// 39. Метод, возвращающий квадрат числа
+static int SquareNumber(int n)
+{
+    return n * n;
+}
+
+// 40. Метод, определяющий, является ли строка палиндромом
+static bool IsPalindrome(string str)
+{
+    if (string.IsNullOrEmpty(str)) return true;
+    string cleanStr = new string(str.ToLower().Where(char.IsLetterOrDigit).ToArray());
+    return cleanStr.SequenceEqual(cleanStr.Reverse());
+}
+
+// 41. Метод, определяющий, является ли строка палиндромом
+static bool CheckPalindrome(string text)
+{
+    if (string.IsNullOrEmpty(text)) return true;
+    string clean = text.ToLower().Replace(" ", "");
+    for (int i = 0; i < clean.Length / 2; i++)
+    {
+        if (clean[i] != clean[clean.Length - 1 - i])
+            return false;
+    }
+    return true;
+}
+
+// 42. Метод, возвращающий абсолютное значение числа
+static double Absolute(double number)
+{
+    return Math.Abs(number);
+}
+
+// 43. Метод, возвращающий длину строки
+static int TextLength(string input)
+{
+    return input == null ? 0 : input.Length;
+}
+
+// 44. Метод, определяющий, является ли число четным
+static bool EvenNumber(int num)
+{
+    return num % 2 == 0;
+}
+
+// 45. Метод для сортировки массива по возрастанию
+static void SortAscending(int[] array)
+{
+    if (array == null) return;
+    Array.Sort(array);
+}
+
+// 46. Метод для реверса строки
+static string Reverse(string s)
+{
+    if (string.IsNullOrEmpty(s)) return s;
+    char[] chars = s.ToCharArray();
+    Array.Reverse(chars);
+    return new string(chars);
+}
+
+// 47. Метод, возвращающий квадрат числа
+static int PowerOfTwo(int x)
+{
+    return x * x;
+}
+
+// 48. Метод для подсчета количества гласных в строке
+static int VowelCount(string text)
+{
+    if (string.IsNullOrEmpty(text)) return 0;
+    char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
+    return text.ToLower().Count(c => vowels.Contains(c));
+}
+
+// 49. Метод для нахождения максимума из трех чисел
+static int FindMaxOfThree(int a, int b, int c)
+{
+    int max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    return max;
+}
+
+// 50. Метод для реверса строки
+static string InvertString(string str)
+{
+    if (string.IsNullOrEmpty(str)) return str;
+    StringBuilder sb = new StringBuilder();
+    for (int i = str.Length - 1; i >= 0; i--)
+        sb.Append(str[i]);
+    return sb.ToString();
+}
+
+// 51. Метод для преобразования градусов Цельсия в Фаренгейт
+static double CelsiusToFahrenheit(double celsius)
+{
+    return celsius * 9 / 5 + 32;
+}
+
+// 52. Метод, возвращающий абсолютное значение числа
+static int Abs(int number)
+{
+    return number < 0 ? -number : number;
+}
+
+// 53. Метод, определяющий, является ли строка палиндромом
+static bool PalindromeCheck(string s)
+{
+    if (string.IsNullOrEmpty(s)) return true;
+    s = s.ToLower().Replace(" ", "");
+    return s == new string(s.Reverse().ToArray());
+}
+
+// 54. Метод для вычисления суммы элементов массива
+static int SumArray(int[] arr)
+{
+    if (arr == null) return 0;
+    int sum = 0;
+    foreach (int item in arr)
+        sum += item;
+    return sum;
+}
+
+// 55. Метод, проверяющий, является ли число простым
+static bool PrimeCheck(int n)
+{
+    if (n < 2) return false;
+    for (int i = 2; i <= Math.Sqrt(n); i++)
+    {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 56. Метод для нахождения максимума из трех чисел
+static int MaxThree(int a, int b, int c)
+{
+    return a > b ? (a > c ? a : c) : (b > c ? b : c);
+}
+
+// 57. Метод, определяющий, является ли число четным
+static bool CheckEven(int number)
+{
+    return number % 2 == 0;
+}
+
+// 58. Метод для вычисления НОД двух чисел
+static int GCDEuclid(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+// 59. Метод для преобразования градусов Цельсия в Фаренгейт
+static double ConvertToFahrenheit(double celsius)
+{
+    return (celsius * 9 / 5) + 32;
+}
+
+// 60. Метод для нахождения максимума из трех чисел
+static int ThreeMax(int x, int y, int z)
+{
+    return Math.Max(x, Math.Max(y, z));
+}
+
+// 61. Метод для вычисления НОД двух чисел
+static int ComputeGCD(int a, int b)
+{
+    return b == 0 ? Math.Abs(a) : ComputeGCD(b, a % b);
+}
+
+// 62. Метод, возвращающий квадрат числа
+static int SquareValue(int value)
+{
+    return value * value;
+}
+
+// 63. Метод для подсчета количества гласных в строке
+static int CountVowelsInString(string str)
+{
+    if (string.IsNullOrEmpty(str)) return 0;
+    string vowels = "aeiouAEIOU";
+    int count = 0;
+    foreach (char c in str)
+    {
+        if (vowels.Contains(c))
+            count++;
+    }
+    return count;
+}
+
+// 64. Метод, возвращающий длину строки
+static int MeasureString(string s)
+{
+    return s?.Length ?? 0;
+}
+
+// 65. Метод для сортировки массива по возрастанию
+static int[] SortNumbers(int[] numbers)
+{
+    if (numbers == null) return null;
+    int[] result = (int[])numbers.Clone();
+    Array.Sort(result);
+    return result;
+}
+
+// 66. Метод, определяющий, является ли строка палиндромом
+static bool IsStringPalindrome(string text)
+{
+    if (string.IsNullOrEmpty(text)) return true;
+    text = text.ToLower().Replace(" ", "");
+    int left = 0, right = text.Length - 1;
+    while (left < right)
+    {
+        if (text[left] != text[right])
+            return false;
+        left++;
+        right--;
+    }
+    return true;
+}
+
+// 67. Метод для конкатенации двух строк
+static string JoinStrings(string first, string second)
+{
+    return first + second;
+}
+
+// 68. Метод, определяющий, является ли строка палиндромом
+static bool PalindromeValidator(string input)
+{
+    if (string.IsNullOrEmpty(input)) return true;
+    string clean = new string(input.ToLower().Where(char.IsLetterOrDigit).ToArray());
+    return clean == new string(clean.Reverse().ToArray());
+}
+
+// 69. Метод, определяющий, является ли строка палиндромом
+static bool IsPalindromic(string s)
+{
+    if (string.IsNullOrEmpty(s)) return true;
+    s = s.ToLower();
+    for (int i = 0; i < s.Length / 2; i++)
+    {
+        if (s[i] != s[s.Length - 1 - i])
+            return false;
+    }
+    return true;
+}
+
+// 70. Метод, проверяющий, является ли число простым
+static bool IsPrimeNum(int num)
+{
+    if (num < 2) return false;
+    if (num == 2) return true;
+    if (num % 2 == 0) return false;
+    
+    for (int i = 3; i * i <= num; i += 2)
+    {
+        if (num % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 71. Метод, возвращающий длину строки
+static int GetStringSize(string str)
+{
+    return str == null ? 0 : str.Length;
+}
+
+// 72. Метод для нахождения максимума из трех чисел
+static int TripleMax(int a, int b, int c)
+{
+    int max = a;
+    if (b > max) max = b;
+    if (c > max) max = c;
+    return max;
+}
+
+// 73. Метод, возвращающий абсолютное значение числа
+static decimal AbsoluteDecimal(decimal number)
+{
+    return number < 0 ? -number : number;
+}
+
+// 74. Метод для конкатенации двух строк
+static string CombineStrings(string s1, string s2)
+{
+    return string.Concat(s1, s2);
+}
+
+// 75. Метод для реверса строки
+static string FlipString(string input)
+{
+    if (string.IsNullOrEmpty(input)) return input;
+    char[] chars = input.ToCharArray();
+    Array.Reverse(chars);
+    return new string(chars);
+}
+
+// 76. Метод для вычисления НОД двух чисел
+static int FindGreatestCommonDivisor(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+// 77. Метод для конкатенации двух строк
+static string MergeStrings(string part1, string part2)
+{
+    return part1 + part2;
+}
+
+// 78. Метод для сортировки массива по возрастанию
+static void SortArrayAscending(int[] arr)
+{
+    if (arr == null) return;
+    for (int i = 0; i < arr.Length - 1; i++)
+    {
+        for (int j = i + 1; j < arr.Length; j++)
+        {
+            if (arr[i] > arr[j])
+            {
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+    }
+}
+
+// 79. Метод для подсчета количества гласных в строке
+static int CountVowelLetters(string text)
+{
+    if (string.IsNullOrEmpty(text)) return 0;
+    char[] vowels = { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
+    return text.Count(c => vowels.Contains(c));
+}
+
+// 80. Метод, возвращающий длину строки
+static int CalculateLength(string str)
+{
+    return str?.Length ?? 0;
+}
+
+// 81. Метод для реверса строки
+static string ReverseOrder(string s)
+{
+    if (string.IsNullOrEmpty(s)) return s;
+    return new string(s.Reverse().ToArray());
+}
+
+// 82. Метод для вычисления НОД двух чисел
+static int GetGCD(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+    return a;
+}
+
+// 83. Метод для вычисления площади прямоугольника
+static double GetRectangleArea(double width, double height)
+{
+    return width * height;
+}
+
+// 84. Метод, определяющий, является ли число четным
+static bool IsNumberEven(int n)
+{
+    return n % 2 == 0;
+}
+
+// 85. Метод для вычисления НОД двух чисел
+static int GCDCalculation(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+// 86. Метод, определяющий, является ли число четным
+static bool EvenCheck(int number)
+{
+    return number % 2 == 0;
+}
+
+// 87. Метод для вычисления площади прямоугольника
+static double AreaOfRectangle(double length, double width)
+{
+    return length * width;
+}
+
+// 88. Метод для подсчета количества гласных в строке
+static int VowelCounter(string input)
+{
+    if (string.IsNullOrEmpty(input)) return 0;
+    string vowels = "aeiouAEIOU";
+    int count = 0;
+    foreach (char c in input)
+    {
+        if (vowels.IndexOf(c) >= 0)
+            count++;
+    }
+    return count;
+}
+
+// 89. Метод, возвращающий длину строки
+static int StringSize(string text)
+{
+    return text?.Length ?? 0;
+}
+
+// 90. Метод для нахождения максимума из трех чисел
+static int MaximumThree(int a, int b, int c)
+{
+    return a > b ? (a > c ? a : c) : (b > c ? b : c);
+}
+
+// 91. Метод, проверяющий, является ли число простым
+static bool PrimeTest(int number)
+{
+    if (number < 2) return false;
+    if (number == 2) return true;
+    if (number % 2 == 0) return false;
+    
+    for (int i = 3; i * i <= number; i += 2)
+    {
+        if (number % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 92. Метод для вычисления суммы элементов массива
+static int TotalSum(int[] numbers)
+{
+    if (numbers == null) return 0;
+    int sum = 0;
+    foreach (int num in numbers)
+        sum += num;
+    return sum;
+}
+
+// 93. Метод для вычисления площади прямоугольника
+static double ComputeRectangleArea(double l, double w)
+{
+    return l * w;
+}
+
+// 94. Метод, проверяющий, является ли число простым
+static bool IsPrimeNumberCheck(int n)
+{
+    if (n < 2) return false;
+    for (int i = 2; i <= Math.Sqrt(n); i++)
+    {
+        if (n % i == 0)
+            return false;
+    }
+    return true;
+}
+
+// 95. Метод для вычисления среднего арифметического массива
+static double ArrayAverage(int[] array)
+{
+    if (array == null || array.Length == 0)
+        throw new ArgumentException("Массив не может быть пустым");
+    
+    return (double)ArraySum(array) / array.Length;
+}
+
+// 96. Метод для подсчета количества гласных в строке
+static int CountVowelCharacters(string str)
+{
+    if (string.IsNullOrEmpty(str)) return 0;
+    char[] vowels = { 'a', 'e', 'i', 'o', 'u' };
+    return str.ToLower().Count(c => vowels.Contains(c));
+}
+
+// 97. Метод для сортировки массива по возрастанию
+static int[] SortIntArray(int[] arr)
+{
+    if (arr == null) return null;
+    int[] copy = (int[])arr.Clone();
+    Array.Sort(copy);
+    return copy;
+}
+
+// 98. Метод, выводящий таблицу умножения числа
+static void ShowMultiplicationTable(int number)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        Console.WriteLine($"{number} × {i} = {number * i}");
+    }
+}
+
+// 99. Метод, возвращающий длину строки
+static int TextSize(string input)
+{
+    return input?.Length ?? 0;
+}
+
+// 100. Метод, выводящий таблицу умножения числа
+static void GenerateMultiplicationTable(int n)
+{
+    for (int i = 1; i <= 10; i++)
+    {
+        Console.WriteLine($"{n} * {i} = {n * i}");
+    }
+}
+
+// 101. Рекурсивная функция для проверки, является ли строка палиндромом
+static bool IsPalindromeRecursive(string str, int start = 0, int end = -1)
+{
+    if (end == -1) end = str.Length - 1;
+    if (start >= end) return true;
+    if (char.ToLower(str[start]) != char.ToLower(str[end])) return false;
+    return IsPalindromeRecursive(str, start + 1, end - 1);
+}
+
+// 102. Рекурсивная функция для генерации всех подмножеств множества
+static List<List<int>> GenerateSubsets(int[] nums, int index = 0)
+{
+    if (index == nums.Length)
+        return new List<List<int>> { new List<int>() };
+    
+    var subsets = GenerateSubsets(nums, index + 1);
+    var result = new List<List<int>>(subsets);
+    foreach (var subset in subsets)
+    {
+        var newSubset = new List<int>(subset) { nums[index] };
+        result.Add(newSubset);
+    }
+    return result;
+}
+
+// 103. Рекурсивная функция для генерации всех подмножеств множества
+static void GenerateAllSubsets(int[] arr, int index, List<int> current, List<List<int>> result)
+{
+    if (index == arr.Length)
+    {
+        result.Add(new List<int>(current));
+        return;
+    }
+    
+    // Не включаем текущий элемент
+    GenerateAllSubsets(arr, index + 1, current, result);
+    
+    // Включаем текущий элемент
+    current.Add(arr[index]);
+    GenerateAllSubsets(arr, index + 1, current, result);
+    current.RemoveAt(current.Count - 1);
+}
+
+// 104. Рекурсивный метод для вычисления суммы цифр числа
+static int SumOfDigits(int number)
+{
+    if (number == 0) return 0;
+    return number % 10 + SumOfDigits(number / 10);
+}
+
+// 105. Рекурсивный метод для вычисления биномиального коэффициента
+static int BinomialCoefficient(int n, int k)
+{
+    if (k == 0 || k == n) return 1;
+    return BinomialCoefficient(n - 1, k - 1) + BinomialCoefficient(n - 1, k);
+}
+
+// 106. Рекурсивная функция для вычисления произведения элементов массива
+static long ProductOfArray(int[] arr, int index = 0)
+{
+    if (arr == null || index >= arr.Length) return 1;
+    return arr[index] * ProductOfArray(arr, index + 1);
+}
+
+// 107. Рекурсивный метод для вычисления биномиального коэффициента
+static int C(int n, int k)
+{
+    if (k < 0 || k > n) return 0;
+    if (k == 0 || k == n) return 1;
+    return C(n - 1, k - 1) + C(n - 1, k);
+}
+
+// 108. Рекурсивный метод для проверки отсортированности массива
+static bool IsSorted(int[] arr, int index = 0)
+{
+    if (arr == null || index >= arr.Length - 1) return true;
+    if (arr[index] > arr[index + 1]) return false;
+    return IsSorted(arr, index + 1);
+}
+
+// 109. Рекурсивная функция для поиска максимума в массиве
+static int FindMaxRecursive(int[] arr, int index = 0)
+{
+    if (arr == null || arr.Length == 0) throw new ArgumentException("Массив не может быть пустым");
+    if (index == arr.Length - 1) return arr[index];
+    int maxOfRest = FindMaxRecursive(arr, index + 1);
+    return Math.Max(arr[index], maxOfRest);
+}
+
+// 110. Рекурсивная функция для проверки, является ли строка палиндромом
+static bool IsPalRecursive(string s)
+{
+    if (s.Length <= 1) return true;
+    if (char.ToLower(s[0]) != char.ToLower(s[s.Length - 1])) return false;
+    return IsPalRecursive(s.Substring(1, s.Length - 2));
+}
+
+// 111. Рекурсивный метод для нахождения НОД двух чисел
+static int GCDRecursive(int a, int b)
+{
+    a = Math.Abs(a);
+    b = Math.Abs(b);
+    if (b == 0) return a;
+    return GCDRecursive(b, a % b);
+}
+
+// 112. Рекурсивный метод для решения задачи Ханойской башни
+static void TowerOfHanoi(int n, char fromRod, char toRod, char auxRod)
+{
+    if (n == 1)
+    {
+        Console.WriteLine($"Move disk 1 from {fromRod} to {toRod}");
+        return;
+    }
+    TowerOfHanoi(n - 1, fromRod, auxRod, toRod);
+    Console.WriteLine($"Move disk {n} from {fromRod} to {toRod}");
+    TowerOfHanoi(n - 1, auxRod, toRod, fromRod);
+}
+
+// 113. Рекурсивная функция для вычисления треугольника Паскаля
+static int PascalTriangle(int row, int col)
+{
+    if (col == 0 || col == row) return 1;
+    return PascalTriangle(row - 1, col - 1) + PascalTriangle(row - 1, col);
+}
+
+// 114. Рекурсивный метод для вычисления суммы чисел от 1 до N
+static int SumToN(int n)
+{
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+    return n + SumToN(n - 1);
+}
+
+// 115. Рекурсивная функция для вычисления чисел Фибоначчи
+static int Fibonacci(int n)
+{
+    if (n <= 0) return 0;
+    if (n == 1) return 1;
+    return Fibonacci(n - 1) + Fibonacci(n - 2);
+}
+
+// 116. Рекурсивная функция для вычисления степени числа
+static double Power(double baseNum, int exponent)
+{
+    if (exponent == 0) return 1;
+    if (exponent < 0) return 1 / Power(baseNum, -exponent);
+    return baseNum * Power(baseNum, exponent - 1);
+}
+
+// 117. Рекурсивный метод для нахождения НОД двух чисел
+static int RecursiveGCD(int a, int b)
+{
+    if (b == 0) return Math.Abs(a);
+    return RecursiveGCD(b, a % b);
+}
+
+// 118. Рекурсивная функция для реверса строки
+static string ReverseRecursive(string str)
+{
+    if (string.IsNullOrEmpty(str)) return str;
+    if (str.Length == 1) return str;
+    return ReverseRecursive(str.Substring(1)) + str[0];
+}
+
+// 119. Рекурсивная функция для вычисления произведения элементов массива
+static long ArrayProduct(int[] arr, int index = 0)
+{
+    if (arr == null || index >= arr.Length) return 1;
+    return arr[index] * ArrayProduct(arr, index + 1);
+}
+
+// 120. Рекурсивная функция для проверки вхождения подстроки в строку
+static bool ContainsSubstring(string str, string substring, int strIndex = 0, int subIndex = 0)
+{
+    if (subIndex == substring.Length) return true;
+    if (strIndex >= str.Length) return false;
+    if (str[strIndex] == substring[subIndex])
+        return ContainsSubstring(str, substring, strIndex + 1, subIndex + 1);
+    return ContainsSubstring(str, substring, strIndex + 1, 0);
+}
+
+// 121. Рекурсивный метод для вычисления суммы чисел от 1 до N
+static int RecursiveSum(int n)
+{
+    if (n <= 0) return 0;
+    return n + RecursiveSum(n - 1);
+}
+
+// 122. Рекурсивный метод для проверки отсортированности массива
+static bool IsArraySorted(int[] arr, int index = 1)
+{
+    if (arr == null || index >= arr.Length) return true;
+    if (arr[index] < arr[index - 1]) return false;
+    return IsArraySorted(arr, index + 1);
+}
+
+// 123. Рекурсивный метод для проверки отсортированности массива
+static bool CheckSorted(int[] array, int currentIndex = 0)
+{
+    if (array == null || currentIndex >= array.Length - 1) return true;
+    if (array[currentIndex] > array[currentIndex + 1]) return false;
+    return CheckSorted(array, currentIndex + 1);
+}
+
+// 124. Рекурсивная функция для проверки вхождения подстроки в строку
+static bool SubstringSearch(string text, string pattern, int textPos = 0, int patternPos = 0)
+{
+    if (patternPos == pattern.Length) return true;
+    if (textPos >= text.Length) return false;
+    if (text[textPos] == pattern[patternPos])
+        return SubstringSearch(text, pattern, textPos + 1, patternPos + 1);
+    return SubstringSearch(text, pattern, textPos + 1, 0);
+}
+
+// 125. Рекурсивный метод для преобразования числа в двоичную систему
+static string ToBinary(int number)
+{
+    if (number == 0) return "0";
+    if (number == 1) return "1";
+    return ToBinary(number / 2) + (number % 2).ToString();
+}
+
+// 126. Рекурсивный метод для решения задачи Ханойской башни
+static void SolveHanoi(int disks, string source, string destination, string auxiliary)
+{
+    if (disks == 1)
+    {
+        Console.WriteLine($"Move disk from {source} to {destination}");
+        return;
+    }
+    SolveHanoi(disks - 1, source, auxiliary, destination);
+    Console.WriteLine($"Move disk from {source} to {destination}");
+    SolveHanoi(disks - 1, auxiliary, destination, source);
+}
+
+// 127. Рекурсивный метод для вычисления суммы цифр числа
+static int DigitSum(int n)
+{
+    if (n == 0) return 0;
+    return (n % 10) + DigitSum(n / 10);
+}
+
+// 128. Рекурсивная функция для генерации всех подмножеств множества
+static void GenerateSubsetsRecursive(int[] set, int index, List<int> current, List<List<int>> allSubsets)
+{
+    if (index == set.Length)
+    {
+        allSubsets.Add(new List<int>(current));
+        return;
+    }
+    
+    // Не включаем текущий элемент
+    GenerateSubsetsRecursive(set, index + 1, current, allSubsets);
+    
+    // Включаем текущий элемент
+    current.Add(set[index]);
+    GenerateSubsetsRecursive(set, index + 1, current, allSubsets);
+    current.RemoveAt(current.Count - 1);
+}
+
+// 129. Рекурсивный метод для вычисления факториала числа
+static long Factorial(int n)
+{
+    if (n < 0) throw new ArgumentException("Факториал отрицательного числа не определен");
+    if (n == 0 || n == 1) return 1;
+    return n * Factorial(n - 1);
+}
+
+// 130. Рекурсивная функция для вычисления степени числа
+static double RecursivePower(double x, int n)
+{
+    if (n == 0) return 1;
+    if (n < 0) return 1 / RecursivePower(x, -n);
+    return x * RecursivePower(x, n - 1);
+}
+
+// 131. Рекурсивная функция для генерации всех подмножеств множества
+static List<List<T>> GetSubsets<T>(List<T> set)
+{
+    if (set.Count == 0)
+        return new List<List<T>> { new List<T>() };
+    
+    var first = set[0];
+    var rest = set.GetRange(1, set.Count - 1);
+    var subsetsWithoutFirst = GetSubsets(rest);
+    var subsetsWithFirst = new List<List<T>>();
+    
+    foreach (var subset in subsetsWithoutFirst)
+    {
+        var newSubset = new List<T>(subset) { first };
+        subsetsWithFirst.Add(newSubset);
+    }
+    
+    subsetsWithoutFirst.AddRange(subsetsWithFirst);
+    return subsetsWithoutFirst;
+}
+
+// 132. Рекурсивный метод для вычисления суммы цифр числа
+static int RecursiveDigitSum(int number)
+{
+    if (number == 0) return 0;
+    return number % 10 + RecursiveDigitSum(number / 10);
+}
+
+// 133. Рекурсивный метод для обхода массива и вывода его элементов
+static void PrintArrayRecursive(int[] arr, int index = 0)
+{
+    if (arr == null || index >= arr.Length) return;
+    Console.WriteLine(arr[index]);
+    PrintArrayRecursive(arr, index + 1);
+}
+
+// 134. Рекурсивная функция для вычисления степени числа
+static double PowerRecursive(double baseValue, int exponent)
+{
+    if (exponent == 0) return 1;
+    if (exponent < 0) return 1 / PowerRecursive(baseValue, -exponent);
+    return baseValue * PowerRecursive(baseValue, exponent - 1);
+}
+
+// 135. Рекурсивная функция Аккермана
+static int Ackermann(int m, int n)
+{
+    if (m == 0) return n + 1;
+    if (n == 0) return Ackermann(m - 1, 1);
+    return Ackermann(m - 1, Ackermann(m, n - 1));
+}
+
+// 136. Рекурсивная функция для вычисления произведения элементов массива
+static long MultiplyArray(int[] array, int index = 0)
+{
+    if (array == null || index >= array.Length) return 1;
+    return array[index] * MultiplyArray(array, index + 1);
+}
+
+// 137. Рекурсивная функция для реверса строки
+static string RecursiveReverse(string s)
+{
+    if (string.IsNullOrEmpty(s)) return s;
+    if (s.Length == 1) return s;
+    return s[s.Length - 1] + RecursiveReverse(s.Substring(0, s.Length - 1));
+}
+
+// 138. Рекурсивный метод для преобразования числа в двоичную систему
+static string DecimalToBinary(int num)
+{
+    if (num == 0) return "0";
+    if (num == 1) return "1";
+    return DecimalToBinary(num / 2) + (num % 2).ToString();
+}
+
+// 139. Рекурсивный метод для вычисления факториала числа
+static long RecursiveFactorial(int n)
+{
+    if (n < 0) throw new ArgumentException("Факториал отрицательного числа не определен");
+    if (n <= 1) return 1;
+    return n * RecursiveFactorial(n - 1);
+}
+
+// 140. Рекурсивный метод для вычисления суммы цифр числа
+static int SumDigits(int num)
+{
+    if (num == 0) return 0;
+    return num % 10 + SumDigits(num / 10);
+}
+
+// 141. Рекурсивный метод для решения задачи Ханойской башни
+static void HanoiTower(int n, char from, char to, char aux)
+{
+    if (n == 1)
+    {
+        Console.WriteLine($"Переместить диск 1 с {from} на {to}");
+        return;
+    }
+    HanoiTower(n - 1, from, aux, to);
+    Console.WriteLine($"Переместить диск {n} с {from} на {to}");
+    HanoiTower(n - 1, aux, to, from);
+}
+
+// 142. Рекурсивная функция для реверса строки
+static string ReverseStringRecursive(string input)
+{
+    if (string.IsNullOrEmpty(input)) return input;
+    if (input.Length == 1) return input;
+    return input[input.Length - 1] + ReverseStringRecursive(input.Substring(0, input.Length - 1));
+}
+
+// 143. Рекурсивный метод для решения задачи Ханойской башни
+static void SolveTowerOfHanoi(int disks, string start, string end, string temp)
+{
+    if (disks == 1)
+    {
+        Console.WriteLine($"Move disk from {start} to {end}");
+        return;
+    }
+    SolveTowerOfHanoi(disks - 1, start, temp, end);
+    Console.WriteLine($"Move disk from {start} to {end}");
+    SolveTowerOfHanoi(disks - 1, temp, end, start);
+}
+
+// 144. Рекурсивная функция для вычисления степени числа
+static double Exponent(double x, int n)
+{
+    if (n == 0) return 1;
+    if (n < 0) return 1 / Exponent(x, -n);
+    return x * Exponent(x, n - 1);
+}
+
+// 145. Рекурсивная функция Аккермана
+static int AckermannFunction(int m, int n)
+{
+    if (m == 0) return n + 1;
+    if (n == 0) return AckermannFunction(m - 1, 1);
+    return AckermannFunction(m - 1, AckermannFunction(m, n - 1));
+}
+
+// 146. Рекурсивный метод для решения задачи Ханойской башни
+static void Hanoi(int n, char source, char target, char auxiliary)
+{
+    if (n > 0)
+    {
+        Hanoi(n - 1, source, auxiliary, target);
+        Console.WriteLine($"Move disk {n} from {source} to {target}");
+        Hanoi(n - 1, auxiliary, target, source);
+    }
+}
+
+// 147. Рекурсивная функция для проверки вхождения подстроки в строку
+static bool FindSubstring(string text, string substring)
+{
+    if (substring.Length > text.Length) return false;
+    if (text.StartsWith(substring)) return true;
+    return FindSubstring(text.Substring(1), substring);
+}
+
+// 148. Рекурсивный метод для подсчета количества цифр в числе
+static int CountDigits(int number)
+{
+    if (number == 0) return 0;
+    return 1 + CountDigits(number / 10);
+}
+
+// 149. Рекурсивный метод для нахождения НОД двух чисел
+static int EuclideanGCD(int a, int b)
+{
+    if (b == 0) return Math.Abs(a);
+    return EuclideanGCD(b, a % b);
+}
+
+// 150. Рекурсивная функция для поиска максимума в массиве
+static int MaxRecursive(int[] arr, int index = 0)
+{
+    if (arr == null || arr.Length == 0) throw new ArgumentException("Массив не может быть пустым");
+    if (index == arr.Length - 1) return arr[index];
+    int restMax = MaxRecursive(arr, index + 1);
+    return Math.Max(arr[index], restMax);
+}

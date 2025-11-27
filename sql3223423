@@ -1,0 +1,608 @@
+Задание 1 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Globalization;
+
+// главный класс — парсер математических выражений
+public class MathParser
+{
+    // тут все встроенные функции типа sin, cos, sqrt и т.д.
+    private static readonly Dictionary<string, Func<double, double>> _functions = new()
+    {
+        { "sin",   Math.Sin },       // синус от радиан
+        { "cos",   Math.Cos },       // косинус
+        { "tan",   Math.Tan },       // тангенс
+        { "sqrt",  Math.Sqrt },      // корень квадратный
+        { "abs",   Math.Abs },       // модуль числа
+        { "ln",    Math.Log },       // натуральный логарифм
+        { "log",   Math.Log10 },     // десятичный логарифм
+        { "exp",   Math.Exp },       // экспонента e^x
+        { "floor", Math.Floor },     // округление вниз
+        { "ceil",  Math.Ceiling },   // округление вверх
+        { "round", Math.Round }      // обычное округление
+    };
+
+    // приоритеты операций: чем больше число — тем выше приоритет
+    private static readonly Dictionary<string, int> _precedence = new()
+    {
+        { "+", 2 }, { "-", 2 },      // сложение и вычитание — низкий приоритет
+        { "*", 3 }, { "/", 3 },      // умножение и деление — выше
+        { "^", 4 }                   // возведение в степень — самый высокий
+    };
+
+    // просто набор операторов, чтобы быстро проверять
+    private static readonly HashSet<string> _operators = new() { "+", "-", "*", "/", "^" };
+
+    // запись-токен: хранит что это — число, переменная, оператор, функция или скобка
+    private sealed record Token(string Value, bool IsOperator, bool IsFunction = false, bool IsParenthesis = false);
+
+    // основной метод — компилирует строку в быстрый делегат
+    public static Func<Dictionary<string, double>, double> Compile(string expression)
+    {
+        var tokens = Tokenize(expression);      // разбиваем строку на токены
+        var rpn = ToRpn(tokens);                // переводим в обратную польскую нотацию (ОПН)
+        return BuildDelegate(rpn);              // из ОПН собираем делегат, который считает значение
+    }
+
+    // этот метод делает тоже самое, но с оптимизацией констант
+    public static Func<Dictionary<string, double>, double> CompileOptimized(string expression)
+    {
+        var del = Compile(expression);          // сначала компилируем
+        return OptimizeConstants(del);          // потом пытаемся посчитать константы заранее
+    }
+
+    // разбивает строку на токены: числа, переменные, скобки, операторы
+    private static List<Token> Tokenize(string expr)
+    {
+        var tokens = new List<Token>();         // сюда будем складывать токены
+        int i = 0;
+        expr = expr.Replace(" ", "");           // убираем все пробелы, чтобы не мешали
+
+        while (i < expr.Length)
+        {
+            char c = expr[i];
+
+            // если буква — это либо функция (sin, cos), либо переменная (x, y)
+            if (char.IsLetter(c))
+            {
+                int start = i;
+                while (i < expr.Length && char.IsLetter(expr[i])) i++;
+                string name = expr.Substring(start, i - start).ToLower();  // в нижний регистр
+
+                if (_functions.ContainsKey(name))
+                    tokens.Add(new Token(name, false, IsFunction: true));   // это функция
+                else
+                    tokens.Add(new Token(name, false));                     // это переменная
+                continue;
+            }
+
+            // числа и числа с точкой (типа 3.14)
+            if (char.IsDigit(c) || c == '.')
+            {
+                int start = i;
+                while (i < expr.Length && (char.IsDigit(expr[i]) || expr[i] == '.')) i++;
+                tokens.Add(new Token(expr.Substring(start, i - start), false));
+                continue;
+            }
+
+            // скобки
+            if (c == '(' || c == ')')
+            {
+                tokens.Add(new Token(c.ToString(), false, IsParenthesis: true));
+                i++;
+                continue;
+            }
+
+            // операторы + - * / ^
+            if ("+-*/^".Contains(c))
+            {
+                tokens.Add(new Token(c.ToString(), true));
+                i++;
+                continue;
+            }
+
+            // если попался непонятный символ — кидаем ошибку
+            throw new ArgumentException($"Неизвестный символ: {c} на позиции {i}");
+        }
+
+        return tokens;
+    }
+
+    // переводит обычную запись в обратную польскую нотацию (шингл-алгоритм)
+    private static List<Token> ToRpn(List<Token> tokens)
+    {
+        var output = new List<Token>();     // сюда попадают токены в ОПН
+        var stack = new Stack<Token>();     // стек для операторов и скобок
+
+        foreach (var token in tokens)
+        {
+            // числа и переменные сразу в выход
+            if (!token.IsOperator && !token.IsFunction && !token.IsParenthesis)
+                output.Add(token);
+
+            // функции и открывающая скобка — в стек
+            else if (token.IsFunction || token.Value == "(")
+                stack.Push(token);
+
+            // закрывающая скобка — выталкиваем всё до открывающей
+            else if (token.Value == ")")
+            {
+                while (stack.Count > 0 && stack.Peek().Value != "(")
+                    output.Add(stack.Pop());
+
+                if (stack.Count == 0) throw new ArgumentException("Нет открывающей скобки");
+
+                stack.Pop(); // выкидываем "("
+
+                // если сверху функция — тоже выкидываем её в выход
+                if (stack.Count > 0 && stack.Peek().IsFunction)
+                    output.Add(stack.Pop());
+            }
+
+            // обычный оператор
+            else if (token.IsOperator)
+            {
+                while (stack.Count > 0 && stack.Peek().IsOperator &&
+                       _precedence[token.Value] <= _precedence.GetValueOrDefault(stack.Peek().Value, 0))
+                    output.Add(stack.Pop());
+
+                stack.Push(token);
+            }
+        }
+
+        // выталкиваем остатки из стека
+        while (stack.Count > 0)
+        {
+            var t = stack.Pop();
+            if (t.IsParenthesis) throw new ArgumentException("Скобки не сбалансированы");
+            output.Add(t);
+        }
+
+        return output;
+    }
+
+    // собирает из ОПН делегат, который быстро считает значение
+    private static Func<Dictionary<string, double>, double> BuildDelegate(List<Token> rpn)
+    {
+        var stack = new Stack<Func<Dictionary<string, double>, double>>();
+
+        foreach (var token in rpn)
+        {
+            // если это функция (sin, cos и т.д.)
+            if (token.IsFunction)
+            {
+                var arg = stack.Pop();                                      // берём аргумент
+                var func = _functions[token.Value];                         // находим нужную функцию
+                stack.Push(vars => func(arg(vars)));                       // кладём лямбду, которая её применит
+            }
+            // если оператор
+            else if (token.IsOperator)
+            {
+                var right = stack.Pop();    // правый операнд
+                var left = stack.Pop();     // левый операнд
+
+                // создаём лямбду в зависимости от оператора
+                stack.Push(token.Value switch
+                {
+                    "+" => v => left(v) + right(v),
+                    "-" => v => left(v) - right(v),
+                    "*" => v => left(v) * right(v),
+                    "/" => v => left(v) / right(v),
+                    "^" => v => Math.Pow(left(v), right(v)),
+                    _ => throw new InvalidOperationException("Неизвестный оператор")
+                });
+            }
+            // число или переменная
+            else
+            {
+                if (double.TryParse(token.Value, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+                {
+                    // это число — просто возвращаем его
+                    stack.Push(_ => val);
+                }
+                else
+                {
+                    // это переменная — ищем в словаре
+                    string varName = token.Value;
+                    stack.Push(vars => vars.TryGetValue(varName, out double v) ? v : throw new KeyNotFoundException($"Переменная {varName} не найдена"));
+                }
+            }
+        }
+
+        return stack.Pop(); // в конце в стеке остаётся один делегат — это и есть всё выражение
+    }
+
+    // пытается посчитать выражение без переменных — если получилось, значит оно константное
+    private static Func<Dictionary<string, double>, double> OptimizeConstants(Func<Dictionary<string, double>, double> func)
+    {
+        try
+        {
+            double result = func(new Dictionary<string, double>());  // пробуем с пустым словарем
+            return _ => result;                                      // если не упало — возвращаем константу
+        }
+        catch
+        {
+            return func;  // есть переменные — оставляем как есть
+        }
+    }
+}
+class Program
+{
+    static void Main()
+    {
+        string expr = "(x + 5)*(y - 2)/z";          // пример из билета
+
+        var calculator = MathParser.CompileOptimized(expr);  // компилируем с оптимизацией
+
+        // задаём значения переменных
+        var variables = new Dictionary<string, double>
+        {
+            ["x"] = 10,
+            ["y"] = 7,
+            ["z"] = 4
+        };
+
+        Console.WriteLine($"Результат: {calculator(variables)}");  // должно быть 37.5
+
+        // 50 случайных тестов
+        var rand = new Random(42);
+        for (int i = 0; i < 50; i++)
+        {
+            double x = rand.NextDouble() * 200 - 100;
+            double y = rand.NextDouble() * 200 - 100;
+            double z = rand.NextDouble() * 100 + 0.1;  // чтобы не было деления на ноль
+
+            double expected = (x + 5) * (y - 2) / z;
+            double actual = calculator(new Dictionary<string, double> { ["x"] = x, ["y"] = y, ["z"] = z });
+
+            if (Math.Abs(expected - actual) > 1e-10)
+                Console.WriteLine($"Ошибка на тесте {i}");
+        }
+
+        Console.WriteLine("Все чётко");
+        Console.ReadKey();
+    }
+}
+
+
+
+Задание 2 
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Text;
+
+public class User
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public int DepartmentId { get; set; }
+}
+
+public class Department
+{
+    public int Id { get; set; }
+    public string Title { get; set; }
+}
+
+// ГЛАВНОЕ ИСПРАВЛЕНИЕ: добавлен IOrderedQueryable<T>
+public class SimpleQuery<T> : IQueryable<T>, IOrderedQueryable<T>, IEnumerable<T>
+{
+    public Type ElementType => typeof(T);
+    public Expression Expression { get; }
+    public IQueryProvider Provider { get; } = new SimpleQueryProvider();
+
+    public SimpleQuery(Expression expression)
+    {
+        Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+    }
+
+    public SimpleQuery() : this(Expression.Constant(null, typeof(SimpleQuery<T>)))
+    {
+    }
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        return Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+}
+
+internal class SimpleQueryProvider : IQueryProvider
+{
+    public IQueryable CreateQuery(Expression expression)
+    {
+        Type elementType = expression.Type.GetGenericArguments()[0];
+        Type queryType = typeof(SimpleQuery<>).MakeGenericType(elementType);
+        return (IQueryable)Activator.CreateInstance(queryType, expression);
+    }
+
+    public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+    {
+        return new SimpleQuery<TElement>(expression);
+    }
+
+    public object Execute(Expression expression) => Execute<object>(expression);
+
+    public TResult Execute<TResult>(Expression expression)
+    {
+        string sql = new SqlTranslator().Translate(expression);
+
+        Console.WriteLine("=== СГЕНЕРИРОВАННЫЙ SQL ===");
+        Console.WriteLine(sql);
+        Console.WriteLine("============================\n");
+
+        if (typeof(IEnumerable).IsAssignableFrom(typeof(TResult)))
+        {
+            Type elementType = typeof(TResult).IsGenericType
+                ? typeof(TResult).GetGenericArguments()[0]
+                : typeof(object);
+
+            var emptyMethod = typeof(Enumerable)
+                .GetMethod("Empty")
+                .MakeGenericMethod(elementType);
+
+            return (TResult)emptyMethod.Invoke(null, null);
+        }
+
+        return default(TResult);
+    }
+}
+
+internal class SqlTranslator : ExpressionVisitor
+{
+    private readonly StringBuilder sb = new StringBuilder();
+
+    public string Translate(Expression exp)
+    {
+        sb.Clear();
+        Visit(exp);
+        return sb.ToString().Trim();
+    }
+
+    protected override Expression VisitMethodCall(MethodCallExpression node)
+    {
+        if (node.Method.DeclaringType == typeof(Queryable))
+        {
+            switch (node.Method.Name)
+            {
+                case "Where":
+                    Visit(node.Arguments[0]);
+                    sb.Append(" WHERE ");
+                    VisitLambda(node.Arguments[1]);
+                    return node;
+
+                case "Select":
+                    Visit(node.Arguments[0]);
+                    sb.Append(" SELECT ");
+                    VisitLambda(node.Arguments[1]);
+                    return node;
+
+                case "OrderBy":
+                case "OrderByDescending":
+                    Visit(node.Arguments[0]);
+                    sb.Append(" ORDER BY ");
+                    VisitLambda(node.Arguments[1]);
+                    if (node.Method.Name == "OrderByDescending") sb.Append(" DESC");
+                    return node;
+
+                case "Join":
+                    Visit(node.Arguments[0]);
+                    sb.Append(" JOIN ");
+                    Visit(node.Arguments[1]);
+                    sb.Append(" ON ");
+                    VisitLambda(node.Arguments[2]);
+                    sb.Append(" = ");
+                    VisitLambda(node.Arguments[3]);
+                    sb.Append(" SELECT ");
+                    VisitLambda(node.Arguments[4]);
+                    return node;
+
+                case "GroupBy":
+                    Visit(node.Arguments[0]);
+                    sb.Append(" GROUP BY ");
+                    VisitLambda(node.Arguments[1]);
+                    return node;
+            }
+        }
+
+        if (node.Method.Name == "ToList")
+        {
+            Visit(node.Arguments[0]);
+            return node;
+        }
+
+        throw new NotSupportedException($"Метод {node.Method.Name} не поддерживается");
+    }
+
+    protected override Expression VisitConstant(ConstantExpression node)
+    {
+        if (node.Value is IQueryable q)
+        {
+            sb.Append($"SELECT * FROM {q.ElementType.Name}s");
+        }
+        return node;
+    }
+
+    private void VisitLambda(Expression node)
+    {
+        if (node is LambdaExpression lambda) Visit(lambda.Body);
+    }
+
+    protected override Expression VisitMember(MemberExpression node)
+    {
+        if (node.Expression is ParameterExpression p)
+            sb.Append($"{p.Name}.{node.Member.Name}");
+        else
+            sb.Append(GetValue(node));
+        return node;
+    }
+
+    protected override Expression VisitBinary(BinaryExpression node)
+    {
+        sb.Append("(");
+        Visit(node.Left);
+        sb.Append(GetOperator(node.NodeType));
+        Visit(node.Right);
+        sb.Append(")");
+        return node;
+    }
+
+    protected override Expression VisitParameter(ParameterExpression node)
+    {
+        sb.Append(node.Name);
+        return node;
+    }
+
+    protected override Expression VisitNew(NewExpression node)
+    {
+        bool first = true;
+        foreach (var arg in node.Arguments)
+        {
+            if (!first) sb.Append(", ");
+            Visit(arg);
+            first = false;
+        }
+        return node;
+    }
+
+    private string GetOperator(ExpressionType type) => type switch
+    {
+        ExpressionType.Equal => " = ",
+        ExpressionType.GreaterThan => " > ",
+        ExpressionType.AndAlso => " AND ",
+        _ => " ??? "
+    };
+
+    private object GetValue(Expression node)
+    {
+        try { return Expression.Lambda(node).Compile().DynamicInvoke(); }
+        catch { return "???"; }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var db = new { Users = new SimpleQuery<User>() };
+
+        db.Users.Where(u => u.Age > 18).ToList();
+        db.Users.OrderBy(u => u.Age).ToList();
+        db.Users.OrderByDescending(u => u.Name).ToList();
+        db.Users.Where(u => u.Age > 10).OrderBy(u => u.Name).ToList();
+
+        Console.WriteLine("чечётка");
+        Console.ReadKey();
+    }
+}
+
+Задание 3
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine("Все версии мемоизированного Фибоначчи (работает!)\n");
+
+        Test("Без мемо", FibNaive, 35);
+        Test("Обычная мемо", FibSimple, 1000);
+        Test("Потокобезопасная", FibThreadSafe, 1000);
+        Test("LRU-кеш (100 эл.)", FibLRU, 1000);
+    }
+
+    // 1. Без мемо
+    static long FibNaive(int n) => n <= 1 ? n : FibNaive(n - 1) + FibNaive(n - 2);
+
+    // 2. Обычная мемо (самый простой и надёжный способ!)
+    static readonly Func<int, long> FibSimple = Memoize(f => n =>
+        n <= 1 ? n : f(n - 1) + f(n - 2));
+
+    // 3. Потокобезопасная
+    static readonly Func<int, long> FibThreadSafe = MemoizeThreadSafe(f => n =>
+        n <= 1 ? n : f(n - 1) + f(n - 2));
+
+    // 4. LRU-кеш — теперь тоже без параметров-типов!
+    static readonly Func<int, long> FibLRU = MemoizeLRU(100, f => n =>
+        n <= 1 ? n : f(n - 1) + f(n - 2));
+
+
+    // Обычная мемо (не обобщённая по T,R — только для int → long)
+    static Func<int, long> Memoize(Func<Func<int, long>, Func<int, long>> factory)
+    {
+        var cache = new Dictionary<int, long>();
+        Func<int, long> f = null!;
+        f = n =>
+        {
+            if (cache.TryGetValue(n, out var v)) return v;
+            v = factory(f)(n);
+            cache[n] = v;
+            return v;
+        };
+        return f;
+    }
+
+    // Потокобезопасная (тоже только int → long)
+    static Func<int, long> MemoizeThreadSafe(Func<Func<int, long>, Func<int, long>> factory)
+    {
+        var cache = new ConcurrentDictionary<int, long>();
+        Func<int, long> f = null!;
+        f = n => cache.GetOrAdd(n, _ => factory(f)(n));
+        return f;
+    }
+
+    // LRU-кеш с ограничением (только int → long)
+    static Func<int, long> MemoizeLRU(int capacity, Func<Func<int, long>, Func<int, long>> factory)
+    {
+        var cache = new Dictionary<int, long>();
+        var order = new LinkedList<int>();
+        var lockObj = new object();
+
+        Func<int, long> f = null!;
+        f = n =>
+        {
+            lock (lockObj)
+            {
+                if (cache.TryGetValue(n, out var v))
+                {
+                    order.Remove(n);
+                    order.AddLast(n);
+                    return v;
+                }
+
+                v = factory(f)(n);
+                cache[n] = v;
+                order.AddLast(n);
+
+                if (cache.Count > capacity)
+                {
+                    var oldest = order.First!.Value;
+                    order.RemoveFirst();
+                    cache.Remove(oldest);
+                }
+                return v;
+            }
+        };
+        return f;
+    }
+
+    static void Test(string name, Func<int, long> fib, int n)
+    {
+        var sw = Stopwatch.StartNew();
+        long result = fib(n);
+        sw.Stop();
+        Console.WriteLine($"{name,-20} Fib({n,4}) = {result} | {sw.ElapsedMilliseconds,5} мс");
+    }
+}

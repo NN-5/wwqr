@@ -1,0 +1,399 @@
+Задача 17.1: Алгоритм для нахождения всех правильных скобочных последовательностей с использованием n пар скобок
+
+using System;
+using System.Collections.Generic;
+
+public class ParenthesesGenerator
+{
+    public IList<string> GenerateParenthesis(int n)
+    {
+        if (n < 0) throw new ArgumentException("n должно быть неотрицательным.");
+
+        List<string> result = new List<string>();
+        Backtrack(result, "", 0, 0, n);
+        return result;
+    }
+
+    private void Backtrack(List<string> result, string current, int open, int close, int max)
+    {
+        if (current.Length == max * 2)
+        {
+            result.Add(current);
+            return;
+        }
+
+        if (open < max)
+        {
+            Backtrack(result, current + "(", open + 1, close, max);
+        }
+
+        if (close < open)
+        {
+            Backtrack(result, current + ")", open, close + 1, max);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        ParenthesesGenerator gen = new ParenthesesGenerator();
+        var parentheses = gen.GenerateParenthesis(3);
+        Console.WriteLine("Правильные скобочные последовательности:");
+        foreach (var p in parentheses)
+        {
+            Console.WriteLine(p);
+        }
+    }
+}
+
+
+
+
+
+
+Задача 17.2: Программа для поворота матрицы на 90 градусов по часовой стрелке на месте
+using System;
+
+public class MatrixRotator
+{
+    public void Rotate(int[][] matrix)
+    {
+        if (matrix == null || matrix.Length == 0) return;
+
+        int n = matrix.Length;
+        for (int i = 0; i < n; i++)
+        {
+            if (matrix[i].Length != n) throw new ArgumentException("Матрица должна быть квадратной.");
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = i + 1; j < n; j++)
+            {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+
+        for (int i = 0; i < n; i++)
+        {
+            Array.Reverse(matrix[i]);
+        }
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        int[][] matrix = new int[][]
+        {
+            new int[] {1, 2, 3},
+            new int[] {4, 5, 6},
+            new int[] {7, 8, 9}
+        };
+
+        MatrixRotator rotator = new MatrixRotator();
+        rotator.Rotate(matrix);
+
+        Console.WriteLine("Повёрнутая матрица:");
+        for (int i = 0; i < matrix.Length; i++)
+        {
+            Console.WriteLine(string.Join(" ", matrix[i]));
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+Задача 17.3: Класс LinkedList для одиночно связного списка
+using System;
+using System.Text;
+
+public class Node
+{
+    public int Value { get; set; }
+    public Node Next { get; set; }
+
+    public Node(int value)
+    {
+        Value = value;
+        Next = null;
+    }
+}
+
+public class LinkedList
+{
+    private Node head;
+
+    public void Insert(int value)
+    {
+        Node newNode = new Node(value);
+        if (head == null)
+        {
+            head = newNode;
+        }
+        else
+        {
+            Node current = head;
+            while (current.Next != null)
+            {
+                current = current.Next;
+            }
+            current.Next = newNode;
+        }
+    }
+
+    public void Delete(int value)
+    {
+        if (head == null) return;
+
+        if (head.Value == value)
+        {
+            head = head.Next;
+            return;
+        }
+
+        Node current = head;
+        while (current.Next != null)
+        {
+            if (current.Next.Value == value)
+            {
+                current.Next = current.Next.Next;
+                return;
+            }
+            current = current.Next;
+        }
+    }
+
+    public bool Search(int value)
+    {
+        Node current = head;
+        while (current != null)
+        {
+            if (current.Value == value) return true;
+            current = current.Next;
+        }
+        return false;
+    }
+
+    public void Reverse()
+    {
+        Node prev = null;
+        Node current = head;
+        while (current != null)
+        {
+            Node next = current.Next;
+            current.Next = prev;
+            prev = current;
+            current = next;
+        }
+        head = prev;
+    }
+
+    public override string ToString()
+    {
+        StringBuilder sb = new StringBuilder();
+        Node current = head;
+        while (current != null)
+        {
+            sb.Append(current.Value).Append(" -> ");
+            current = current.Next;
+        }
+        return sb.Length > 0 ? sb.ToString(0, sb.Length - 4) : "";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        LinkedList ll = new LinkedList();
+        ll.Insert(1);
+        ll.Insert(2);
+        ll.Insert(3);
+        Console.WriteLine(ll);
+
+        ll.Reverse();
+        Console.WriteLine(ll);
+
+        ll.Delete(2);
+        Console.WriteLine(ll);
+
+        Console.WriteLine(ll.Search(1));
+        Console.WriteLine(ll.Search(4));
+    }
+}
+
+
+
+
+
+
+
+
+Задача 17.4: Алгоритм для нахождения LCS двух строк методом динамического программирования
+using System;
+using System.Text;
+
+public class LCSFinder
+{
+    public (int, string) LongestCommonSubsequence(string s1, string s2)
+    {
+        int m = s1.Length;
+        int n = s2.Length;
+        int[,] dp = new int[m + 1, n + 1];
+
+        for (int i = 1; i <= m; i++)
+        {
+            for (int j = 1; j <= n; j++)
+            {
+                if (s1[i - 1] == s2[j - 1])
+                {
+                    dp[i, j] = dp[i - 1, j - 1] + 1;
+                }
+                else
+                {
+                    dp[i, j] = Math.Max(dp[i - 1, j], dp[i, j - 1]);
+                }
+            }
+        }
+
+        StringBuilder lcs = new StringBuilder();
+        int ii = m, jj = n;
+        while (ii > 0 && jj > 0)
+        {
+            if (s1[ii - 1] == s2[jj - 1])
+            {
+                lcs.Insert(0, s1[ii - 1]);
+                ii--;
+                jj--;
+            }
+            else if (dp[ii - 1, jj] > dp[ii, jj - 1])
+            {
+                ii--;
+            }
+            else
+            {
+                jj--;
+            }
+        }
+
+        return (dp[m, n], lcs.ToString());
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        LCSFinder finder = new LCSFinder();
+        var (length, subsequence) = finder.LongestCommonSubsequence("ABCBDAB", "BDCAB");
+        Console.WriteLine($"Длина LCS: {length}, Подпоследовательность: {subsequence}");
+    }
+}
+
+
+
+
+
+
+
+
+
+Задача 17.5: Программа для системы инвентаризации
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+public class InventorySystem
+{
+    private Dictionary<string, (int Quantity, double Price)> inventory = new Dictionary<string, (int, double)>();
+
+    public void AddItem(string name, int quantity, double price)
+    {
+        if (quantity < 0) throw new ArgumentException("Количество не может быть отрицательным.");
+
+        if (inventory.ContainsKey(name))
+        {
+            var (q, p) = inventory[name];
+            inventory[name] = (q + quantity, p);
+        }
+        else
+        {
+            inventory[name] = (quantity, price);
+        }
+    }
+
+    public void RemoveItem(string name, int quantity)
+    {
+        if (!inventory.ContainsKey(name))
+        {
+            Console.WriteLine($"Товар {name} не найден.");
+            return;
+        }
+
+        var (q, p) = inventory[name];
+        if (q < quantity)
+        {
+            Console.WriteLine($"Недостаточно {name} на складе.");
+            return;
+        }
+
+        inventory[name] = (q - quantity, p);
+        if (inventory[name].Quantity == 0)
+        {
+            inventory.Remove(name);
+        }
+    }
+
+    public string CheckDiscrepancy(string name, int expectedQuantity)
+    {
+        if (!inventory.ContainsKey(name)) return "Товар не найден";
+
+        int actual = inventory[name].Quantity;
+        if (actual > expectedQuantity) return $"Перелёт: +{actual - expectedQuantity}";
+        if (actual < expectedQuantity) return $"Недолёт: -{expectedQuantity - actual}";
+        return "Соответствует";
+    }
+
+    public string GenerateReport()
+    {
+        StringBuilder report = new StringBuilder("Отчёт по складу:\n");
+        double totalValue = 0;
+
+        foreach (var kvp in inventory)
+        {
+            string name = kvp.Key;
+            var (q, p) = kvp.Value;
+            double value = q * p;
+            report.AppendLine($"{name}: {q} шт., цена {p}, стоимость {value}");
+            totalValue += value;
+        }
+
+        report.AppendLine($"Общая стоимость: {totalValue}");
+        return report.ToString();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        InventorySystem inv = new InventorySystem();
+        inv.AddItem("Яблоки", 100, 1.5);
+        inv.AddItem("Бананы", 50, 2.0);
+        inv.RemoveItem("Яблоки", 20);
+        Console.WriteLine(inv.CheckDiscrepancy("Яблоки", 80));
+        Console.WriteLine(inv.GenerateReport());
+    }
+}

@@ -1,0 +1,14 @@
+Коммит 1: "Initial commit: Setup project structure with index.html"
+— Создайте папку проекта, добавьте пустой index.html.
+Коммит 2: "Add basic CSS styles for UI"
+— Добавьте файл style.css с базовыми стилями.
+Коммит 3: "Implement Task and TaskManager classes in script.js"
+— Добавьте script.js с классами Task и TaskManager (без рендеринга).
+Коммит 4: "Add local storage functionality using LocalStorage"
+— Добавьте методы saveTasks и loadTasks в script.js.
+Коммит 5: "Implement task rendering and form event listeners"
+— Добавьте renderTasks и обработчик формы в script.js.
+Коммит 6: "Add edit and delete features with prompts and buttons"
+— Реализуйте функции редактирования и удаления.
+Коммит 7: "Add sorting by priority and status change functionality"
+— Добавьте сортировку и изменение статуса.

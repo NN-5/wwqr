@@ -1,0 +1,106 @@
+// Класс для задачи
+class Task {
+    constructor(id, title, description, priority, deadline, status = 'todo') {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.priority = priority;
+        this.deadline = deadline;
+        this.status = status;
+    }
+}
+
+// Менеджер задач
+class TaskManager {
+    constructor() {
+        this.tasks = this.loadTasks();
+        this.renderTasks();
+    }
+
+    addTask(title, description, priority, deadline) {
+        const id = Date.now().toString();
+        const task = new Task(id, title, description, priority, deadline);
+        this.tasks.push(task);
+        this.saveTasks();
+        this.renderTasks();
+    }
+
+    editTask(id, updates) {
+        const task = this.tasks.find(t => t.id === id);
+        if (task) {
+            Object.assign(task, updates);
+            this.saveTasks();
+            this.renderTasks();
+        }
+    }
+
+    removeTask(id) {
+        this.tasks = this.tasks.filter(t => t.id !== id);
+        this.saveTasks();
+        this.renderTasks();
+    }
+
+    changeStatus(id, status) {
+        const task = this.tasks.find(t => t.id === id);
+        if (task) {
+            task.status = status;
+            this.saveTasks();
+            this.renderTasks();
+        }
+    }
+
+    saveTasks() {
+        localStorage.setItem('tasks', JSON.stringify(this.tasks));
+    }
+
+    loadTasks() {
+        const stored = localStorage.getItem('tasks');
+        return stored ? JSON.parse(stored).map(t => new Task(t.id, t.title, t.description, t.priority, t.deadline, t.status)) : [];
+    }
+
+    renderTasks() {
+        const list = document.getElementById('taskList');
+        list.innerHTML = '';
+        this.tasks.sort((a, b) => ['high', 'medium', 'low'].indexOf(a.priority) - ['high', 'medium', 'low'].indexOf(b.priority));
+        this.tasks.forEach(task => {
+            const li = document.createElement('li');
+            li.className = task.status === 'done' ? 'done' : '';
+            li.innerHTML = `
+                <strong>${task.title}</strong> (Приоритет: ${task.priority}, Дедлайн: ${task.deadline || 'Нет'})
+                <p>${task.description}</p>
+                <select onchange="taskManager.changeStatus('${task.id}', this.value)">
+                    <option value="todo" ${task.status === 'todo' ? 'selected' : ''}>To Do</option>
+                    <option value="inprogress" ${task.status === 'inprogress' ? 'selected' : ''}>In Progress</option>
+                    <option value="done" ${task.status === 'done' ? 'selected' : ''}>Done</option>
+                </select>
+                <button onclick="editTask('${task.id}')">Редактировать</button>
+                <button onclick="taskManager.removeTask('${task.id}')">Удалить</button>
+            `;
+            list.appendChild(li);
+        });
+    }
+}
+
+// Глобальная функция для редактирования (для упрощения)
+function editTask(id) {
+    const task = taskManager.tasks.find(t => t.id === id);
+    if (task) {
+        const title = prompt('Новое название:', task.title);
+        const description = prompt('Новое описание:', task.description);
+        if (title) {
+            taskManager.editTask(id, { title, description });
+        }
+    }
+}
+
+const taskManager = new TaskManager();
+
+document.getElementById('taskForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const priority = document.getElementById('priority').value;
+    const deadline = document.getElementById('deadline').value;
+    taskManager.addTask(title, description, priority, deadline);
+    e.target.reset();
+});
